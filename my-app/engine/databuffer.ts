@@ -4,7 +4,7 @@ export class DataBuffer {
   private filled = false;
   private maxsize: number;
 
-  constructor(maxsize: 1000) {
+  constructor(maxsize: number) {
     this.maxsize = maxsize;
     this.buffer = new Array(maxsize);
   }

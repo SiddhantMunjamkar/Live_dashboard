@@ -10,6 +10,9 @@ export function drawLineChart(
 
   ctx.beginPath();
   ctx.strokeStyle = "#22c55e";
+
+
+  
   ctx.lineWidth = 2;
 
   const max = Math.max(...data);
