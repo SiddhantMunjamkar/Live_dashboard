@@ -1,15 +1,17 @@
-let t = 0;
+export function StartFakeStream(onData: (data: number) => void) {
+  let running = true;
 
-export function StartFakeStream(
-  onData: (data: number) => void,
-  ratepersecond: 1000
-) {
-  const interval = 1000 / ratepersecond;
+  function loop() {
+    if (!running) {
+      return;
+    }
+    const value = 50 + Math.sin(performance.now() / 300) * 20;
+    onData(value);
 
-  setInterval(() => {
-    t += 0.05;
-    const base = 50 + Math.sin(t) * 20;
-    const noise = Math.random() * 5;
-    onData(base + noise);
-  }, interval);
+    setTimeout(loop, 10);
+  }
+  loop();
+  return () => {
+    running = false;
+  };
 }
