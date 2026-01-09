@@ -1,10 +1,5 @@
-export interface DataPoint {
-  time: number;
-  value: number;
-}
-
 export class DataBuffer {
-  private buffer: DataPoint[];
+  private buffer: number[];
   private index = 0;
   private filled = false;
   private maxsize: number;
@@ -15,22 +10,19 @@ export class DataBuffer {
   }
 
   push(value: number) {
-    this.buffer[this.index] = {
-      time: performance.now(),
-      value: value
-    };
+    this.buffer[this.index] = value;
     this.index = (this.index + 1) % this.maxsize;
     if (this.index === 0) this.filled = true;
   }
 
-  getsnapshot(): DataPoint[] {
+  getsnapshot(): number[] {
     if (!this.filled) {
-      return this.buffer.slice(0, this.index).filter(Boolean);
+      return this.buffer.slice(0, this.index).filter((v) => v !== undefined);
     }
 
     return [
       ...this.buffer.slice(this.index),
       ...this.buffer.slice(0, this.index),
-    ].filter(Boolean);
+    ].filter((v) => v !== undefined);
   }
 }
