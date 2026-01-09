@@ -70,9 +70,9 @@ export default function ChartCanvas() {
 
   return (
     <canvas
-      className="w-full h-[400px] bg-black rounded-md"
+      className="w-full h-[400px] rounded-md border"
       ref={canvasRef}
-      style={{ width: "100%", height: "300px" }}
+      // style={{ width: "100%", height: "300px" }}
     />
   );
 }
