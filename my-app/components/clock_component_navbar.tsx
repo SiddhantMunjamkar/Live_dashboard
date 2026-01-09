@@ -21,7 +21,7 @@ export function ClockComponentNavbar() {
   return (
     <div className="flex items-center text-slate-400 text-sm font-medium gap-1">
       <Clock4 className="w-4 h-4" />
-      <span className="font-mono tabular-nums">{time}</span> UTC
+      <div className="font-mono tabular-nums">{time}</div> UTC
     </div>
   );
 }

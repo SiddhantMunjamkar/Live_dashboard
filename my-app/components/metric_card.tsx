@@ -1,37 +1,145 @@
-interface MetricCardProps{
-    Name: string;
-    Value: string;
-    Icon: string;
+import { cn } from "@/lib/utils";
+import { Card } from "@/components/ui/card";
+import { TrendingUp } from "lucide-react";
+import { TrendingDown } from "lucide-react";
 
+interface MetricCardProps {
+  label: string;
+  value?: string | number;
+  unit?: string;
+  delta?: number;
+  icon: string;
+  iconColor: string;
+  progress?: number;
+  progressColor?: "primary" | "blue" | "orange" | "emerald";
+  status?: "LIVE" | "DOWN";
+  footer?: string;
 }
 
+export const progressColorMap = {
+  primary: "#13ec80",
+  blue: "#3b82f6",
+  orange: "#f97316",
+  emerald: "#10b981",
+};
 
+export const METRIC_CARDS: MetricCardProps[] = [
+  {
+    label: "Events / Sec",
+    value: "1,245",
+    delta: 5.2,
+    icon: "bolt",
+    iconColor: "text-primary",
+    progress: 70,
+    progressColor: "primary" as const,
+  },
+  {
+    label: "Avg Latency",
+    value: "45.2",
+    unit: "ms",
+    icon: "timer",
+    iconColor: "text-blue-400",
+    progress: 45,
+    progressColor: "blue" as const,
+  },
+  {
+    label: "Max Latency",
+    value: "98.1",
+    unit: "ms",
+    icon: "warning",
+    iconColor: "text-orange-400",
+    progress: 30,
+    progressColor: "orange" as const,
+  },
+  {
+    label: "Connection Status",
+    icon: "wifi",
+    iconColor: "text-emerald-400",
+    status: "LIVE",
+    footer: "Uptime: 14d 2h 12m",
+  },
+];
 
-export function MetricCard({Name,Value,Icon}:MetricCardProps) {
+export function MetricCard({
+  label,
+  value,
+  unit,
+  delta,
+  icon,
+  iconColor,
+  progress,
+  progressColor = "primary",
+  status,
+  footer,
+}: MetricCardProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-auto shrink-0 pb-6">
-      <div className="bg-slate-900 border border-slate-800 rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group">
-        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-          <span className="material-symbols-outlined text-6xl text-primary">
-            {Icon}
-          </span>
-        </div>
-        <h3 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">
-          Events / Sec{Name}
-        </h3>
-        <div className="flex items-baseline gap-2 z-10">
-          <span className="text-3xl font-bold text-white">1,245{Value}</span>
-          <span className="text-xs font-medium text-primary flex items-center">
-            <span className="material-symbols-outlined text-sm">
-              trending_up
-            </span>
-            +5.2%
-          </span>
-        </div>
-        <div className="w-full bg-slate-800 h-1 mt-4 rounded-full overflow-hidden">
-          <div className="bg-green-500 h-full w-[70%]"></div>
-        </div>
+    <Card className="bg-slate-900 border-slate-800 rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group gap-0 shadow-none">
+      {/* Background Icon */}
+      <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+        <span className={cn("material-symbols-outlined text-6xl", iconColor)}>
+          {icon}
+        </span>
       </div>
-    </div>
+
+      {/* Label */}
+      <h3 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">
+        {label}
+      </h3>
+
+      {/* Value */}
+      {value && (
+        <div className="flex items-baseline gap-2 z-10">
+          <span className="text-3xl font-bold text-white">{value}</span>
+          {unit && (
+            <span className="text-sm font-medium text-slate-400">{unit}</span>
+          )}
+          {delta && (
+            <span
+              className={`text-xs font-medium  flex items-center gap-1 ${
+                delta > 0 ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              {delta > 0 ? (
+                <TrendingUp className="text-green-500 w-3 h-3" />
+              ) : (
+                <TrendingDown className="text-red-500 w-3 h-3" />
+              )}
+              {delta}%
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Status */}
+      {status && (
+        <div className="flex items-center gap-3 z-10 mt-1">
+          <span className="relative flex h-4 w-4">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500" />
+          </span>
+          <span className="text-2xl font-bold text-white tracking-tight">
+            {status}
+          </span>
+        </div>
+      )}
+
+      {/* Progress */}
+      {progress !== undefined && (
+        <div className="w-full bg-slate-800 h-1 mt-4 rounded-full overflow-hidden">
+          <div
+            className="h-full"
+            style={{
+              width: `${progress}%`,
+              backgroundColor: progressColorMap[progressColor],
+            }}
+          />
+        </div>
+      )}
+
+      {/* Footer */}
+      {footer && (
+        <p className="text-xs text-slate-500 mt-2 font-mono">{footer}</p>
+      )}
+    </Card>
   );
 }
