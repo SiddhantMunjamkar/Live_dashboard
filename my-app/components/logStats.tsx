@@ -5,7 +5,7 @@ export function LogStats() {
         <h3 className="text-sm font-bold text-slate-200">Recent Events</h3>
         <span className="text-xs text-slate-500">Auto-scroll: ON</span>
       </div>
-      <div className=" overflow-y-scroll scrollbar-hide flex-1 p-0">
+      <div className="overflow-y-scroll flex-1 p-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <table className="w-full text-left text-sm border-collapse">
           <thead className="bg-slate-800/50 text-slate-400 text-xs uppercase sticky top-0 backdrop-blur-sm">
             <tr>
