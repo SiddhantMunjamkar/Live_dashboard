@@ -1,11 +1,14 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
 import { TrendingDown } from "lucide-react";
-import { TimerReset } from 'lucide-react';
-import { ShieldAlert } from 'lucide-react';
-import { Wifi } from 'lucide-react';
-import { Zap } from 'lucide-react';
+import { TimerReset } from "lucide-react";
+import { ShieldAlert } from "lucide-react";
+import { Wifi } from "lucide-react";
+import { Zap } from "lucide-react";
+import { Metrics, useMetrics } from "@/types/metrics";
 
 interface MetricCardProps {
   label: string;
@@ -27,42 +30,81 @@ export const progressColorMap = {
   emerald: "#10b981",
 };
 
-export const METRIC_CARDS: MetricCardProps[] = [
-  {
-    label: "Events / Sec",
-    value: "1,245",
-    delta: 5.2,
-    icon: <Zap className="w-12 h-12" />,
-    iconColor: "text-green-500",
-    progress: 70,
-    progressColor: "primary" as const,
-  },
-  {
-    label: "Avg Latency",
-    value: "45.2",
-    unit: "ms",
-    icon: <TimerReset className="w-12 h-12" />,
-    iconColor: "text-blue-400",
-    progress: 45,
-    progressColor: "blue" as const,
-  },
-  {
-    label: "Max Latency",
-    value: "98.1",
-    unit: "ms",
-    icon: <ShieldAlert className="w-12 h-12" />,
-    iconColor: "text-orange-400",
-    progress: 30,
-    progressColor: "orange" as const,
-  },
-  {
-    label: "Connection Status",
-    icon: <Wifi className="w-12 h-12" />,
-    iconColor: "text-emerald-400",
-    status: "LIVE",
-    footer: "Uptime: 14d 2h 12m",
-  },
-];
+export function getMetricCards(metrics: Metrics) {
+  return [
+    {
+      label: "Events / Sec",
+      value: metrics.eps.toLocaleString(),
+      delta: metrics.epsDelta,
+      icon: <Zap className="w-12 h-12" />,
+      iconColor: "text-green-500",
+      progress: metrics.epsProgress,
+      progressColor: "primary" as const,
+    },
+    {
+      label: "Avg Latency",
+      value: metrics.avg.toFixed(1),
+      unit: "ms",
+      icon: <TimerReset className="w-12 h-12" />,
+      iconColor: "text-blue-400",
+      progress: metrics.avgProgress,
+      progressColor: "blue" as const,
+    },
+    {
+      label: "Max Latency",
+      value: metrics.max.toFixed(1),
+      unit: "ms",
+      icon: <ShieldAlert className="w-12 h-12" />,
+      iconColor: "text-orange-400",
+      progress: metrics.maxProgress,
+      progressColor: "orange" as const,
+    },
+    {
+      label: "Connection Status",
+      icon: <Wifi className="w-12 h-12" />,
+      iconColor: "text-emerald-400",
+      status: metrics.status,
+      footer: `Uptime: ${metrics.uptime}`,
+    },
+  ];
+}
+
+// export const METRIC_CARDS: MetricCardProps[] = [
+//   {
+//     label: "Events / Sec",
+//     value: "1,245",
+//     delta: 5.2,
+//     icon: <Zap className="w-12 h-12" />,
+//     iconColor: "text-green-500",
+//     progress: 70,
+//     progressColor: "primary" as const,
+//   },
+//   {
+//     label: "Avg Latency",
+//     value: "45.2",
+//     unit: "ms",
+//     icon: <TimerReset className="w-12 h-12" />,
+//     iconColor: "text-blue-400",
+//     progress: 45,
+//     progressColor: "blue" as const,
+//   },
+//   {
+//     label: "Max Latency",
+//     value: "98.1",
+//     unit: "ms",
+//     icon: <ShieldAlert className="w-12 h-12" />,
+//     iconColor: "text-orange-400",
+//     progress: 30,
+//     progressColor: "orange" as const,
+//   },
+//   {
+//     label: "Connection Status",
+//     icon: <Wifi className="w-12 h-12" />,
+//     iconColor: "text-emerald-400",
+//     status: "LIVE",
+//     footer: "Uptime: 14d 2h 12m",
+//   },
+// ];
 
 export function MetricCard({
   label,
@@ -97,18 +139,18 @@ export function MetricCard({
           {unit && (
             <span className="text-sm font-medium text-slate-400">{unit}</span>
           )}
-          {delta && (
+          {delta !== undefined && (
             <span
               className={`text-xs font-medium  flex items-center gap-1 ${
-                delta > 0 ? "text-green-500" : "text-red-500"
+                delta >= 0 ? "text-green-500" : "text-red-500"
               }`}
             >
-              {delta > 0 ? (
+              {delta >= 0 ? (
                 <TrendingUp className="text-green-500 w-3 h-3" />
               ) : (
                 <TrendingDown className="text-red-500 w-3 h-3" />
               )}
-              {delta}%
+              {delta.toFixed(1)}%
             </span>
           )}
         </div>
@@ -145,5 +187,18 @@ export function MetricCard({
         <p className="text-xs text-slate-500 mt-2 font-mono">{footer}</p>
       )}
     </Card>
+  );
+}
+
+export function MetricCards() {
+  const metrics = useMetrics();
+  const cards = getMetricCards(metrics);
+
+  return (
+    <>
+      {cards.map((card, i) => (
+        <MetricCard key={i} {...card} />
+      ))}
+    </>
   );
 }

@@ -6,8 +6,9 @@ import { drawLineChart } from "@/engine/renderer";
 import { startRenderloop } from "@/engine/scheduler";
 import { FPSCounter } from "@/engine/metrics";
 import { StartFakeStream } from "@/lib/fakestream";
-import {  shouldDropFrame } from "@/engine/backpressure";
+import { shouldDropFrame } from "@/engine/backpressure";
 import { handleworkerBatch } from "@/engine/batcher";
+import { stats } from "@/engine/stats";
 
 export default function ChartCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -19,6 +20,8 @@ export default function ChartCanvas() {
   const lastRenderTimeRef = useRef(0);
 
   useEffect(() => {
+
+
     const Newworker = new Worker(
       new URL("../worker/steam.worker.ts", import.meta.url),
       { type: "module" }
@@ -36,14 +39,14 @@ export default function ChartCanvas() {
     const canvas = canvasRef.current!;
     const container = containerRef.current!;
     const ctx = canvas.getContext("2d")!;
-    
+
     // Set canvas dimensions based on container
     const updateCanvasSize = () => {
       const rect = container.getBoundingClientRect();
       canvas.width = rect.width;
       canvas.height = rect.height;
     };
-    
+
     updateCanvasSize();
 
     const stream = StartFakeStream((value: number) => {
@@ -57,22 +60,21 @@ export default function ChartCanvas() {
       }
 
       lastRenderTimeRef.current = performance.now();
-      
+
       // Get timestamped data and render with time-based positioning
       const snapshot = bufferRef.current.getsnapshot();
-      drawLineChart(
-        snapshot,
-        ctx,
-        canvas.width,
-        canvas.height
-      );
+      drawLineChart(snapshot, ctx, canvas.width, canvas.height);
       fpsRef.current.tick();
+      
+      // Update global stats with FPS
+      stats.fps = fpsRef.current.fps;
     });
 
     return () => {
       stream?.(); // stop the fake stream
       stopRender();
       Newworker.terminate();
+     
       // resetFrame();
     };
   }, []);
@@ -82,8 +84,7 @@ export default function ChartCanvas() {
       {/* Header */}
       <div className="flex justify-between items-center px-4 py-3 border-b border-slate-800 bg-slate-900/80 backdrop-blur z-10">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-slate-400 text-sm">
-          </span>
+          <span className="material-symbols-outlined text-slate-400 text-sm"></span>
           <h2 className="text-sm font-bold text-slate-200">Incoming Traffic</h2>
         </div>
         <div className="flex gap-2">
@@ -110,7 +111,10 @@ export default function ChartCanvas() {
         </div>
 
         {/* Canvas - matches grid area */}
-        <div ref={containerRef} className="absolute left-12 right-4 top-4 bottom-10 z-10">
+        <div
+          ref={containerRef}
+          className="absolute left-12 right-4 top-4 bottom-10 z-10"
+        >
           <canvas
             className="w-full h-full"
             ref={canvasRef}

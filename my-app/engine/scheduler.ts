@@ -4,6 +4,7 @@ export function startRenderloop(render: () => void) {
   function loop() {
     if (!running) return;
     render();
+    
     requestAnimationFrame(loop);
   }
 

@@ -1,3 +1,8 @@
+"use client";
+
+import { useClientPerformance } from "@/types/client_performance";
+import { ClientPerformance } from "@/types/client_performance";
+
 interface PerformancePanelProps {
   label: string;
   value: number;
@@ -12,28 +17,39 @@ const progressColorMap = {
   emerald: "#10b981",
 };
 
-export const performanceMetrics: PerformancePanelProps[] = [
-  {
-    label: "FPS",
-    value: 60,
-    progress: 98,
-    progressColor: "emerald",
-  },
-  {
-    label: "OPS",
-    value: 2400,
-    progress: 65,
-    progressColor: "blue",
-  },
-  {
-    label: "DROP",
-    value: 0,
-    progress: 2,
-    progressColor: "orange",
-  },
-];
+
+
+
+function getData(client_props: ClientPerformance): PerformancePanelProps[] {
+    return [
+        {
+        label: "FPS",
+        value: client_props.fps,
+        progress: client_props.fpsProgress,
+        progressColor: "emerald" as const,
+        },
+        {
+        label: "OPS",
+        value: client_props.ops,
+        progress: client_props.opsProgress,
+        progressColor: "blue" as const,
+        },
+        {
+        label: "DROP",
+        value: client_props.drops,
+        progress: client_props.dropsProgress,
+        progressColor: "orange" as const,
+        }
+    ]
+
+}
+
+
 
 export function PerformancePanel() {
+    const metrics = useClientPerformance();
+    const performanceMetrics=getData(metrics);
+
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-lg p-4 flex flex-col gap-4">
       <div className="flex items-center justify-between border-b border-slate-800 pb-2">
