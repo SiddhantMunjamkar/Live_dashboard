@@ -2,13 +2,17 @@ import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
 import { TrendingDown } from "lucide-react";
+import { TimerReset } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
+import { Wifi } from 'lucide-react';
+import { Zap } from 'lucide-react';
 
 interface MetricCardProps {
   label: string;
   value?: string | number;
   unit?: string;
   delta?: number;
-  icon: string;
+  icon: React.ReactNode;
   iconColor: string;
   progress?: number;
   progressColor?: "primary" | "blue" | "orange" | "emerald";
@@ -28,8 +32,8 @@ export const METRIC_CARDS: MetricCardProps[] = [
     label: "Events / Sec",
     value: "1,245",
     delta: 5.2,
-    icon: "bolt",
-    iconColor: "text-primary",
+    icon: <Zap className="w-12 h-12" />,
+    iconColor: "text-green-500",
     progress: 70,
     progressColor: "primary" as const,
   },
@@ -37,7 +41,7 @@ export const METRIC_CARDS: MetricCardProps[] = [
     label: "Avg Latency",
     value: "45.2",
     unit: "ms",
-    icon: "timer",
+    icon: <TimerReset className="w-12 h-12" />,
     iconColor: "text-blue-400",
     progress: 45,
     progressColor: "blue" as const,
@@ -46,14 +50,14 @@ export const METRIC_CARDS: MetricCardProps[] = [
     label: "Max Latency",
     value: "98.1",
     unit: "ms",
-    icon: "warning",
+    icon: <ShieldAlert className="w-12 h-12" />,
     iconColor: "text-orange-400",
     progress: 30,
     progressColor: "orange" as const,
   },
   {
     label: "Connection Status",
-    icon: "wifi",
+    icon: <Wifi className="w-12 h-12" />,
     iconColor: "text-emerald-400",
     status: "LIVE",
     footer: "Uptime: 14d 2h 12m",
@@ -76,7 +80,7 @@ export function MetricCard({
     <Card className="bg-slate-900 border-slate-800 rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group gap-0 shadow-none">
       {/* Background Icon */}
       <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-        <span className={cn("material-symbols-outlined text-6xl", iconColor)}>
+        <span className={cn("material-symbols-outlined text-6xl ", iconColor)}>
           {icon}
         </span>
       </div>

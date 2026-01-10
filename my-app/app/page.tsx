@@ -1,6 +1,7 @@
 import ChartCanvas from "@/components/ChartCanvas";
 import { MetricCard } from "@/components/metric_card";
 import { METRIC_CARDS } from "@/components/metric_card";
+import { PerformancePanel } from "@/components/PerformancePanel";
 
 export default function DashboardPage() {
   return (
@@ -11,6 +12,16 @@ export default function DashboardPage() {
         ))}
       </div>
       <ChartCanvas />
+      <div className=" flex gap-5 pt-5">
+        <div className="flex-[2] bg-slate-900 border border-slate-800 rounded-lg">
+          hi there
+        </div>
+
+        <div className="flex-[1]">
+          {/* Performance Panel */}
+          <PerformancePanel />
+        </div>
+      </div>
     </div>
   );
 }
