@@ -4,12 +4,12 @@ A high-performance, real-time monitoring dashboard built with Next.js 16, React 
 
 ![Live Dashboard Preview](./images/image_live_dashboard.png)
 
-## 📺 Demo Video
+<!-- ## 📺 Demo Video
 
 <video width="100%" autoplay muted loop controls>
   <source src="./images/2026-01-11%2009-05-34.mp4" type="video/mp4">
   Your browser doesn't support video playback. <a href="./images/2026-01-11%2009-05-34.mp4">Download the video</a>
-</video>
+</video> -->
 
 ## ✨ Features
 
@@ -382,9 +382,7 @@ Custom theme tokens defined in [globals.css](my-app/app/globals.css):
 - Static optimization where possible
 - Code splitting enabled
 
-## 📝 License
 
-This project is open source and available for educational purposes.
 
 ## 👨‍💻 Author
 
