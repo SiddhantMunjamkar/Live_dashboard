@@ -12,6 +12,8 @@ export function StartFakeStream(onData: (data: number) => void) {
     stats.values.push(value);
     onData(value);
 
+
+    
     setTimeout(loop, 10);
   }
   loop();
