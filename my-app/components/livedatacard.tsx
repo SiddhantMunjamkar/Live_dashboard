@@ -16,6 +16,8 @@ export function LiveDataCard() {
       setIsOnline(false);
     }
 
+
+    
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
