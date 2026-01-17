@@ -10,6 +10,8 @@ export function Navbar() {
         {/* LEFT */}
         <Navbar_path_show />
 
+        
+
         {/* RIGHT */}
         <div className="flex items-center gap-4 text-xs text-gray-400">
           <LiveDataCard />
